@@ -1,18 +1,18 @@
-import React, { FC, useState } from 'react';
-import { MessageManager } from './ipc/MessageManager';
+import React, { FC } from 'react';
+import { useAppContext } from './state/AppContextProvider';
+import { Home } from './views/Home';
+import { Preferences } from './views/Preferences';
 
 export const Main: FC = () => {
-  const [serial, setSerial] = useState('/dev/tty.usbmodem1301');
+  const { view } = useAppContext();
 
-  const handleOnChange = ({ currentTarget: { value } }) => setSerial(value);
+  if (view === 'HOME') {
+    return <Home/>;
+  }
 
-  const handleConnect = () => {
-    MessageManager.openConnection(serial);
-  };
+  if (view === 'PREFERENCES') {
+    return <Preferences/>;
+  }
 
-  return <div>
-    <label htmlFor="serial"/>
-    <input name="serial" value="/dev/tty.usbmodem1301" onChange={handleOnChange}/>
-    <button onClick={handleConnect}>Connect</button>
-  </div>;
+  return <div>404</div>;
 };

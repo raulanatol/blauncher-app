@@ -7,7 +7,7 @@ const createTray = (appManager: AppManager) => {
   const tray = new Tray('assets/icon16x16.png');
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Preferences...', type: 'normal', click: () => appManager.showPreferencesPanel() },
-    { label: 'Item2', type: 'separator' },
+    { type: 'separator' },
     { label: 'Quit blauncher', type: 'normal', click: () => appManager.quitApplication() }
   ]);
   tray.setToolTip('blauncher');
@@ -44,32 +44,6 @@ export class AppManager {
     this.subscribeEvents();
   }
 
-  subscribeEvents() {
-    this.app.on('ready', () => this.onAppReady());
-    this.app.on('window-all-closed', () => this.onWindowAllClosed());
-    this.app.on('activate', () => this.onActivate());
-    ipcMain.on('open-connection', (event, arg) => this.onOpenConnection(event, arg));
-  }
-
-  onAppReady() {
-    this.tray = createTray(this);
-    this.mainWindow = createMainWindow();
-  }
-
-  onWindowAllClosed() {
-    if (!isMacEnvironment()) {
-      this.app.quit();
-    }
-  }
-
-  onActivate() {
-    this.showMainWindow();
-  }
-
-  onOpenConnection(event, arg) {
-    this.driver = new Driver(arg);
-  }
-
   private showMainWindow() {
     if (noBrowserWindow()) {
       this.mainWindow = createMainWindow();
@@ -77,8 +51,36 @@ export class AppManager {
     this.mainWindow.show();
   }
 
+  private subscribeEvents() {
+    this.app.on('ready', () => this.onAppReady());
+    this.app.on('window-all-closed', () => this.onWindowAllClosed());
+    this.app.on('activate', () => this.onActivate());
+    ipcMain.on('open-connection', (event, arg) => this.onOpenConnection(event, arg));
+  }
+
+  private onAppReady() {
+    this.tray = createTray(this);
+    this.mainWindow = createMainWindow();
+  }
+
+  private onWindowAllClosed() {
+    if (!isMacEnvironment()) {
+      this.app.quit();
+    }
+  }
+
+  private onActivate() {
+    this.showMainWindow();
+  }
+
+  private onOpenConnection(event, arg) {
+    this.driver = new Driver(arg);
+  }
+
   showPreferencesPanel() {
     this.showMainWindow();
+    console.log('AA', ipcMain);
+    this.mainWindow.webContents.send('show-preferences', 'asd');
   }
 
   quitApplication() {
