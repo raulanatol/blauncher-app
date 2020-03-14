@@ -12,7 +12,7 @@ interface AppContextModel {
 const AppContext = createContext<AppContextModel | null>(null);
 
 export const AppProvider = (props) => {
-  const [view, setView] = useState<VIEW>('HOME');
+  const [view, setView] = useState<VIEW>('PREFERENCES');
   const [boardConnected] = useState(false);
 
   useEffect(() => {

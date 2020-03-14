@@ -1,5 +1,5 @@
 import { App, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
-import { Driver } from '../driver/Driver';
+import { SerialDriver } from '../driver/SerialDriver';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
@@ -36,7 +36,7 @@ const noBrowserWindow = () => BrowserWindow.getAllWindows().length === 0;
 
 export class AppManager {
   app: App;
-  driver: Driver;
+  driver: SerialDriver;
   tray: Tray;
   mainWindow: BrowserWindow;
 
@@ -75,7 +75,7 @@ export class AppManager {
   }
 
   private onOpenConnection(event, arg) {
-    this.driver = new Driver(arg);
+    this.driver = new SerialDriver(arg);
   }
 
   showPreferencesPanel() {

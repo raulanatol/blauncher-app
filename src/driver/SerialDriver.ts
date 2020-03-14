@@ -3,7 +3,7 @@ import { onData } from './events';
 
 export const MAX_PIXEL_NUMBER = 32;
 
-export class Driver {
+export class SerialDriver {
   port: SerialPort;
 
   constructor(address: string) {
@@ -27,5 +27,12 @@ export class Driver {
     });
 
     this.port.on('error', console.error);
+  }
+
+  static getPorts() {
+    SerialPort.list().then(
+      ports => ports.forEach(console.log),
+      err => console.error(err)
+    );
   }
 }

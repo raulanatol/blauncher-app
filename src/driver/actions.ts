@@ -1,6 +1,6 @@
 import { Pixel } from './Pixel';
 import { clearBoard, drawPixelCommand } from './commands';
-import { MAX_PIXEL_NUMBER } from './Driver';
+import { MAX_PIXEL_NUMBER } from './SerialDriver';
 
 export const executeAction = (key: number, writeCallback) => {
   console.log('Execute action from ', key);
