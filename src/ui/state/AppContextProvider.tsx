@@ -16,11 +16,16 @@ export const AppProvider = (props) => {
   const [boardConnected] = useState(false);
 
   useEffect(() => {
+    const onShowHome = () => setView('HOME');
     const onShowPreferences = () => setView('PREFERENCES');
 
+    ipcRenderer.on('show-home', onShowHome);
     ipcRenderer.on('show-preferences', onShowPreferences);
 
-    return () => ipcRenderer.off('show-preferences', onShowPreferences);
+    return () => {
+      ipcRenderer.off('show-home', onShowHome);
+      ipcRenderer.off('show-preferences', onShowPreferences);
+    }
   }, []);
 
   const values: AppContextModel = {

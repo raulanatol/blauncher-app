@@ -6,6 +6,7 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 const createTray = (appManager: AppManager) => {
   const tray = new Tray('assets/icon16x16.png');
   const contextMenu = Menu.buildFromTemplate([
+    { label: 'Activate', type: 'normal', click: () => appManager.showHomePanel() },
     { label: 'Preferences...', type: 'normal', click: () => appManager.showPreferencesPanel() },
     { type: 'separator' },
     { label: 'Quit blauncher', type: 'normal', click: () => appManager.quitApplication() }
@@ -84,5 +85,10 @@ export class AppManager {
 
   quitApplication() {
     this.app.quit();
+  }
+
+  showHomePanel() {
+    this.showMainWindow();
+    this.mainWindow.webContents.send('show-home');
   }
 }
