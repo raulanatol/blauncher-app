@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { ipcRenderer } from 'electron';
 
 type VIEW = 'HOME' | 'PREFERENCES';
 
@@ -13,6 +14,14 @@ const AppContext = createContext<AppContextModel | null>(null);
 export const AppProvider = (props) => {
   const [view, setView] = useState<VIEW>('HOME');
   const [boardConnected] = useState(false);
+
+  useEffect(() => {
+    const onShowPreferences = () => setView('PREFERENCES');
+
+    ipcRenderer.on('show-preferences', onShowPreferences);
+
+    return () => ipcRenderer.off('show-preferences', onShowPreferences);
+  }, []);
 
   const values: AppContextModel = {
     view,

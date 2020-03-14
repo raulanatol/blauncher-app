@@ -7,6 +7,7 @@ export const Home: FC = () => {
   const toPreferences = () => changeView('PREFERENCES');
 
   return <div>
+    <h1>HOME</h1>
     <button onClick={toPreferences}>To Preferences</button>
   </div>;
 };

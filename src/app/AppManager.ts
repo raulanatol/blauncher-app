@@ -79,8 +79,7 @@ export class AppManager {
 
   showPreferencesPanel() {
     this.showMainWindow();
-    console.log('AA', ipcMain);
-    this.mainWindow.webContents.send('show-preferences', 'asd');
+    this.mainWindow.webContents.send('show-preferences');
   }
 
   quitApplication() {
