@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { LauncherPreferences } from './components/LauncherPreferences';
-import { useAppContext } from '../../state/AppContextProvider';
+import { useStoreContext } from '../../state/AppContextProvider';
 import styled from '@emotion/styled';
 
 const Container = styled.div`
@@ -13,9 +13,9 @@ const Space = styled.div`
 `;
 
 export const Preferences: FC = () => {
-  const { changeView } = useAppContext();
+  const store = useStoreContext();
 
-  const handleSave = () => changeView('HOME');
+  const handleSave = () => store.changeView('HOME');
 
   return <Container>
     <h1>Preferences</h1>

@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { useAppContext } from '../state/AppContextProvider';
+import { useStoreContext } from '../state/AppContextProvider';
 
 export const Home: FC = () => {
-  const { changeView } = useAppContext();
+  const store = useStoreContext();
 
-  const toPreferences = () => changeView('PREFERENCES');
+  const toPreferences = () => store.changeView('PREFERENCES');
 
   return <div>
     <h1>HOME</h1>

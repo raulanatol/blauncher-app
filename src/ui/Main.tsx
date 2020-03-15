@@ -1,18 +1,19 @@
 import React, { FC } from 'react';
-import { useAppContext } from './state/AppContextProvider';
+import { useStoreContext } from './state/AppContextProvider';
 import { Home } from './views/Home';
 import { Preferences } from './views/preferences/Preferences';
+import { observer } from 'mobx-react';
 
-export const Main: FC = () => {
-  const { view } = useAppContext();
+export const Main: FC = observer(() => {
+  const { currentView } = useStoreContext();
 
-  if (view === 'HOME') {
+  if (currentView === 'HOME') {
     return <Home/>;
   }
 
-  if (view === 'PREFERENCES') {
+  if (currentView === 'PREFERENCES') {
     return <Preferences/>;
   }
 
   return <div>404</div>;
-};
+});

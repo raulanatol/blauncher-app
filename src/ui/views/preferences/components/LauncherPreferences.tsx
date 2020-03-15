@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { refresh } from 'react-icons-kit/fa/refresh';
 import { MessageManager } from '../../../ipc/MessageManager';
-import { useAppContext } from '../../../state/AppContextProvider';
+import { useStoreContext } from '../../../state/AppContextProvider';
 import styled from '@emotion/styled';
 import { IconButton } from '../../../components/IconButton';
 
@@ -13,7 +13,8 @@ export const LauncherPreferences: FC = () => {
   const [disabled, setDisabled] = useState<boolean>(true);
   const [serialPortList, setSerialPortList] = useState<string[]>([]);
   const [currentSerialPort, setCurrentSerialPort] = useState<string>();
-  const { setBoardConnected } = useAppContext();
+  const store = useStoreContext();
+
 
   useEffect(() => {
     MessageManager.getSerialPorts().then(newSerialPorts => setSerialPortList(newSerialPorts));
@@ -26,7 +27,7 @@ export const LauncherPreferences: FC = () => {
 
   const doConnect = () => {
     MessageManager.openConnection(currentSerialPort)
-      .then(() => setBoardConnected(true))
+      .then(() => store.boardConnected())
       .catch(err => console.error(err));
   };
 

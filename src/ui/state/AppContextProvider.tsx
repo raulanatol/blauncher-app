@@ -1,24 +1,18 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, FC, useContext, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
+import { useLocalStore } from 'mobx-react';
+import { RootStore } from './RootStore';
 
-type VIEW = 'HOME' | 'PREFERENCES';
+const AppContext = createContext<RootStore | null>(null);
 
-interface AppContextModel {
-  view: VIEW;
-  boardConnected: boolean;
-  changeView: (view: VIEW) => void;
-  setBoardConnected: (boardConnected: boolean) => void;
-}
+const createStores = () => (): RootStore => new RootStore();
 
-const AppContext = createContext<AppContextModel | null>(null);
-
-export const AppProvider = (props) => {
-  const [view, setView] = useState<VIEW>('PREFERENCES');
-  const [boardConnected, setBoardConnected] = useState(false);
+export const AppProvider: FC = (props) => {
+  const store = useLocalStore(createStores());
 
   useEffect(() => {
-    const onShowHome = () => setView('HOME');
-    const onShowPreferences = () => setView('PREFERENCES');
+    const onShowHome = () => store.changeView('HOME');
+    const onShowPreferences = () => store.changeView('PREFERENCES');
 
     ipcRenderer.on('show-home', onShowHome);
     ipcRenderer.on('show-preferences', onShowPreferences);
@@ -27,18 +21,19 @@ export const AppProvider = (props) => {
       ipcRenderer.off('show-home', onShowHome);
       ipcRenderer.off('show-preferences', onShowPreferences);
     };
-  }, []);
+  }, [store]);
 
-  const values: AppContextModel = {
-    view,
-    boardConnected,
-    setBoardConnected,
-    changeView: setView
-  };
-
-  return <AppContext.Provider value={values} {...props}/>;
+  return <AppContext.Provider value={store} {...props}/>;
 };
 
-export const useAppContext = (): AppContextModel => useContext(AppContext);
+export const useStoreContext = (): RootStore => {
+  const store = useContext(AppContext);
+
+  if (!store) {
+    throw new Error('useStoreContext must be used within a AppContextProvider');
+  }
+
+  return store;
+};
 
 AppContext.displayName = 'AppContext';
