@@ -27,6 +27,7 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "no-unused-vars": "error",
     "no-multiple-empty-lines": "error",
     "curly": [

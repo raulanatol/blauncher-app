@@ -4,7 +4,7 @@ import { SerialDriver } from '../driver/SerialDriver';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
 const createTray = (appManager: AppManager) => {
-  const tray = new Tray('assets/icon16x16.png');
+  const tray = new Tray('assets/icon16x16gray.png');
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Activate', type: 'normal', click: () => appManager.showHomePanel() },
     { label: 'Preferences...', type: 'normal', click: () => appManager.showPreferencesPanel() },
@@ -77,7 +77,11 @@ export class AppManager {
 
   private async onOpenConnection(event, address: string): Promise<boolean> {
     this.driver = new SerialDriver(address);
-    return this.driver.openConnection();
+    const isConnected = await this.driver.openConnection();
+    if (isConnected) {
+      this.tray.setImage('assets/icon16x16.png');
+    }
+    return isConnected;
   }
 
   private static async handleGetSerialPorts(): Promise<string[]> {
