@@ -7,13 +7,14 @@ interface AppContextModel {
   view: VIEW;
   boardConnected: boolean;
   changeView: (view: VIEW) => void;
+  setBoardConnected: (boardConnected: boolean) => void;
 }
 
 const AppContext = createContext<AppContextModel | null>(null);
 
 export const AppProvider = (props) => {
   const [view, setView] = useState<VIEW>('PREFERENCES');
-  const [boardConnected] = useState(false);
+  const [boardConnected, setBoardConnected] = useState(false);
 
   useEffect(() => {
     const onShowHome = () => setView('HOME');
@@ -25,12 +26,13 @@ export const AppProvider = (props) => {
     return () => {
       ipcRenderer.off('show-home', onShowHome);
       ipcRenderer.off('show-preferences', onShowPreferences);
-    }
+    };
   }, []);
 
   const values: AppContextModel = {
     view,
     boardConnected,
+    setBoardConnected,
     changeView: setView
   };
 

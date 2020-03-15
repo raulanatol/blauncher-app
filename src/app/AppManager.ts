@@ -56,7 +56,8 @@ export class AppManager {
     this.app.on('ready', () => this.onAppReady());
     this.app.on('window-all-closed', () => this.onWindowAllClosed());
     this.app.on('activate', () => this.onActivate());
-    ipcMain.on('open-connection', (event, arg) => this.onOpenConnection(event, arg));
+    ipcMain.handle('open-connection', async (event, address) => this.onOpenConnection(event, address));
+    ipcMain.handle('get-serial-ports', async () => AppManager.handleGetSerialPorts());
   }
 
   private onAppReady() {
@@ -74,8 +75,13 @@ export class AppManager {
     this.showMainWindow();
   }
 
-  private onOpenConnection(event, arg) {
-    this.driver = new SerialDriver(arg);
+  private async onOpenConnection(event, address: string): Promise<boolean> {
+    this.driver = new SerialDriver(address);
+    return this.driver.openConnection();
+  }
+
+  private static async handleGetSerialPorts(): Promise<string[]> {
+    return SerialDriver.getPorts();
   }
 
   showPreferencesPanel() {

@@ -7,17 +7,11 @@ export class SerialDriver {
   port: SerialPort;
 
   constructor(address: string) {
-
-    SerialPort.list().then(
-      ports => ports.forEach(console.log),
-      err => console.error(err)
-    );
-
-    // this.port = new SerialPort(address, {
-    //   baudRate: 115200,
-    //   autoOpen: true
-    // });
-    // this.subscribeEvent();
+    this.port = new SerialPort(address, {
+      baudRate: 115200,
+      autoOpen: false
+    });
+    this.subscribeEvent();
   }
 
   private subscribeEvent() {
@@ -29,10 +23,20 @@ export class SerialDriver {
     this.port.on('error', console.error);
   }
 
-  static getPorts() {
-    SerialPort.list().then(
-      ports => ports.forEach(console.log),
-      err => console.error(err)
-    );
+  static getPorts(): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      SerialPort.list().then(
+        ports => resolve(ports.map(port => port.path)),
+        err => reject(err)
+      );
+    });
+  }
+
+  openConnection(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.port.open(err => {
+        err ? reject(err) : resolve(true);
+      });
+    });
   }
 }
