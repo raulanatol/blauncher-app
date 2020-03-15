@@ -67,6 +67,7 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^5.1.1",
     "emotion": "^10.0.27",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",

@@ -1,8 +1,12 @@
-import { action, observable } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
+import ElectronStore from 'electron-store';
+import { MessageManager } from '../ipc/MessageManager';
 
 export type View = 'HOME' | 'PREFERENCES';
 
 export class RootStore {
+
+  private electronStore: ElectronStore<any>;
 
   @observable
   isBoardConnected: boolean;
@@ -10,9 +14,22 @@ export class RootStore {
   @observable
   currentView: View;
 
+  @observable
+  serialPorts?: string[];
+
+  lastSerialPortConnected: string;
+
   constructor() {
     this.isBoardConnected = false;
     this.currentView = 'HOME';
+    this.electronStore = new ElectronStore();
+
+    this.lastSerialPortConnected = this.electronStore.get('lastSerialPortConnected');
+    this.initialize();
+  }
+
+  private initialize() {
+    this.updateSerialPorts();
   }
 
   @action
@@ -21,7 +38,18 @@ export class RootStore {
   }
 
   @action
-  boardConnected() {
+  boardConnected(serialPortAddress: string) {
     this.isBoardConnected = true;
+    this.lastSerialPortConnected = serialPortAddress;
+    this.electronStore.set('lastSerialPortConnected', serialPortAddress);
+  }
+
+  @action
+  updateSerialPorts() {
+    MessageManager.getSerialPorts().then(newSerialPorts => {
+      runInAction(() => {
+        this.serialPorts = newSerialPorts;
+      });
+    });
   }
 }
