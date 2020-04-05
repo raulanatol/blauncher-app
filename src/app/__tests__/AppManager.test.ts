@@ -1,6 +1,6 @@
 import { AppManager } from '../AppManager';
 
-describe('AppManager', () => {
+xdescribe('AppManager', () => {
   describe('subscribeEvents', () => {
     test('should subscribe to all event when the app is created', () => {
       const appOnSpy = jest.fn();
