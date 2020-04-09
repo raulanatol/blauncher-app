@@ -1,5 +1,6 @@
 # Blauncher app
 
+![CI](https://github.com/raulanatol/blauncher-app/workflows/CI/badge.svg)
 
 
 
