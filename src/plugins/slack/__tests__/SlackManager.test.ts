@@ -1,8 +1,8 @@
-import { SlackAppleScript } from '../SlackAppleScript';
+import { SlackManager } from '../SlackAppleScript';
 
 xdescribe('SlackAppleScript', () => {
   test('should change to workspace two', async () => {
-    const app = new SlackAppleScript();
+    const app = new SlackManager();
     await app.changeToWorkspaceNumber(2);
   });
 });
