@@ -2,7 +2,7 @@ import { action, observable, runInAction } from 'mobx';
 import ElectronStore from 'electron-store';
 import { MessageManager } from '../ipc/MessageManager';
 
-export type View = 'HOME' | 'PREFERENCES';
+export type View = 'HOME' | 'PREFERENCES' | 'BOARD';
 
 export class RootStore {
 

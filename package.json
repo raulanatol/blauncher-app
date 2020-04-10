@@ -65,6 +65,11 @@
       ]
     }
   },
+  "jest": {
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/config/jest/preprocessor.js"
+    }
+  },
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
@@ -111,12 +116,8 @@
     "prettier": "^1.19.1",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.7.0"
+    "typescript": "^3.7.0",
+    "url-loader": "^4.1.0"
   },
-  "productName": "blauncher-app",
-  "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/config/jest/preprocessor.js"
-    }
-  }
+  "productName": "blauncher-app"
 }
