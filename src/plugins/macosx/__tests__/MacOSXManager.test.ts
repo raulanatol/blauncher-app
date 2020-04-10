@@ -1,8 +1,13 @@
-import { MacOSXAppleScript } from '../MacOSXAppleScript';
+import { MacOSXManager } from '../MacOSXManager';
 
-describe('MacOSXAppleScript', () => {
-  test('should change to do not disturb mode', async () => {
-    const app = new MacOSXAppleScript();
-    await app.doNotDisturb();
+describe('MacOSXManager', () => {
+  xtest('should change to do not disturb mode', async () => {
+    const manager = new MacOSXManager();
+    await manager.doNotDisturb();
+  });
+
+  xtest('should exit from do not disturb mode', async () => {
+    const manager = new MacOSXManager();
+    await manager.exitDoNotDisturb();
   });
 });

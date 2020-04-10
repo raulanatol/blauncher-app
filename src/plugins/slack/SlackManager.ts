@@ -1,8 +1,13 @@
 import '@jxa/global-type';
-import { Slack } from './Slack';
-import { run } from '@jxa/run';
+import { Slack } from '../../contracts/Slack';
+import { Action, executeActions, KEY_CODE_ENTER } from '../utils/appleScript/appleScript';
 
-export class SlackAppleScript implements Slack {
+export class SlackManager implements Slack {
+  readonly appName: string;
+
+  constructor() {
+    this.appName = 'Slack';
+  }
 
   async changeStatus(newStatus) {
     await this.changeToChannel('me');
@@ -32,46 +37,28 @@ export class SlackAppleScript implements Slack {
   }
 
   async changeToWorkspaceNumber(workspaceNumber: number) {
-    return run(workspaceNumber => {
-      const systemEvents = Application('System Events');
-      const slack = Application('Slack');
-      slack.includeStandardAdditions = true;
-      slack.activate();
-      delay(0.5);
-      systemEvents.keystroke(workspaceNumber, { using: 'command down' });
-      delay(0.5);
-    }, workspaceNumber);
+    const actions: Action[] = [
+      { beforeDelay: 0.5, keyStroke: workspaceNumber + '', options: { using: 'command down' } }
+    ];
+    return executeActions(this.appName, actions);
   }
 
   private async changeToChannel(channelName: string) {
-    return run(channelName => {
-      const slack = Application('Slack');
-      slack.includeStandardAdditions = true;
-      slack.activate();
-      delay(0.5);
-      const systemEvents = Application('System Events');
-      systemEvents.keystroke('k', { using: 'command down' });
-      delay(0.5);
-      systemEvents.keystroke(channelName);
-      delay(0.5);
-      systemEvents.keyCode(36);
-      delay(0.5);
-    }, channelName);
+    const actions: Action[] = [
+      { keyStroke: 'k', options: { using: 'command down' }, beforeDelay: 0.5 },
+      { keyStroke: channelName, beforeDelay: 0.5 },
+      { beforeDelay: 0.5, keyCode: KEY_CODE_ENTER }
+    ];
+    return executeActions(this.appName, actions);
   }
 
   private async sendMessage(message: string) {
-    return run(message => {
-      const systemEvents = Application('System Events');
-      const slack = Application('Slack');
-      slack.includeStandardAdditions = true;
-      slack.activate();
-      delay(0.5);
-      systemEvents.keystroke(message);
-      delay(0.5);
-      systemEvents.keyCode(36);
-      delay(0.5);
-      systemEvents.keyCode(36);
-    }, message);
+    const actions: Action[] = [
+      { beforeDelay: 0.5, keyStroke: message },
+      { beforeDelay: 0.5, keyCode: KEY_CODE_ENTER },
+      { beforeDelay: 0.5, keyCode: KEY_CODE_ENTER }
+    ];
+    return executeActions(this.appName, actions);
   }
 
   private async executeCommand(command: string) {
