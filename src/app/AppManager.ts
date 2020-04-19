@@ -1,5 +1,6 @@
 import { App, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
 import { SerialDriver } from '../driver/SerialDriver';
+import ElectronStore from 'electron-store';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 
@@ -39,10 +40,13 @@ export class AppManager {
   driver: SerialDriver;
   tray: Tray;
   mainWindow: BrowserWindow;
+  electronStore: ElectronStore<any>;
 
   constructor(app: App) {
     this.app = app;
     this.subscribeEvents();
+    this.electronStore = new ElectronStore();
+    this.electronStore.set('isBoardConnected', false);
   }
 
   private showMainWindow() {
@@ -53,16 +57,17 @@ export class AppManager {
   }
 
   private subscribeEvents() {
-    this.app.on('ready', () => this.onAppReady());
+    this.app.on('ready', async () => this.onAppReady());
     this.app.on('window-all-closed', () => this.onWindowAllClosed());
     this.app.on('activate', () => this.onActivate());
-    ipcMain.handle('open-connection', async (event, address) => this.onOpenConnection(event, address));
+    ipcMain.handle('open-connection', async (event, address) => this.onOpenConnection(address));
     ipcMain.handle('get-serial-ports', async () => AppManager.handleGetSerialPorts());
   }
 
-  private onAppReady() {
+  private async onAppReady() {
     this.tray = createTray(this);
     this.mainWindow = createMainWindow();
+    this.connectToLastSerialPort();
   }
 
   private onWindowAllClosed() {
@@ -75,7 +80,7 @@ export class AppManager {
     this.showMainWindow();
   }
 
-  private async onOpenConnection(event, address: string): Promise<boolean> {
+  private async onOpenConnection(address: string): Promise<boolean> {
     this.driver = new SerialDriver(address);
     const isConnected = await this.driver.openConnection();
     if (isConnected) {
@@ -100,5 +105,14 @@ export class AppManager {
   showHomePanel() {
     this.showMainWindow();
     this.mainWindow.webContents.send('show-home');
+  }
+
+  private async connectToLastSerialPort() {
+    const lastSerialPort = this.electronStore.get('lastSerialPortConnected');
+
+    if (lastSerialPort) {
+      await this.onOpenConnection(lastSerialPort);
+      this.electronStore.set('isBoardConnected', true);
+    }
   }
 }
