@@ -13,9 +13,11 @@ export const AppProvider: FC = (props) => {
   useEffect(() => {
     const onShowHome = () => store.changeView('HOME');
     const onShowPreferences = () => store.changeView('PREFERENCES');
+    const onBoardKeyPressed = (event, args) => store.boardKeyPressed(args.keyNumber);
 
     ipcRenderer.on('show-home', onShowHome);
     ipcRenderer.on('show-preferences', onShowPreferences);
+    ipcRenderer.on('board-key-pressed', onBoardKeyPressed);
 
     return () => {
       ipcRenderer.off('show-home', onShowHome);

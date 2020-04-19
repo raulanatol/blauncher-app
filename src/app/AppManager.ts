@@ -82,6 +82,9 @@ export class AppManager {
 
   private async onOpenConnection(address: string): Promise<boolean> {
     this.driver = new SerialDriver(address);
+
+    this.driver.on('board-key-pressed', event => this.mainWindow.webContents.send(event.type, event));
+
     const isConnected = await this.driver.openConnection();
     if (isConnected) {
       this.tray.setImage('assets/icon16x16.png');

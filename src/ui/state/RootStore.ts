@@ -38,6 +38,12 @@ export class RootStore {
   }
 
   @action
+  boardKeyPressed(keyNumber: number) {
+    console.log('boardKeyPressed', keyNumber);
+    // this.lastKeyPressed = keyNumber + '';
+  }
+
+  @action
   boardConnected(serialPortAddress: string) {
     this.isBoardConnected = true;
     this.lastSerialPortConnected = serialPortAddress;

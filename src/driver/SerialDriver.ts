@@ -1,12 +1,14 @@
 import SerialPort from 'serialport';
-import { onData } from './events';
+import { EventEmitter } from 'events';
+import { toEvent } from './events';
 
 export const MAX_PIXEL_NUMBER = 32;
 
-export class SerialDriver {
+export class SerialDriver extends EventEmitter {
   port: SerialPort;
 
   constructor(address: string) {
+    super();
     this.port = new SerialPort(address, {
       baudRate: 115200,
       autoOpen: false
@@ -17,10 +19,17 @@ export class SerialDriver {
   private subscribeEvent() {
     this.port.on('open', () => {
       console.log('*** Port open ***');
-      this.port.on('data', onData(this.port));
+      this.port.on('data', (rawData) => this.processInputData(rawData));
     });
 
     this.port.on('error', console.error);
+  }
+
+  private processInputData(buffer) {
+    const event = toEvent(buffer);
+    if (event) {
+      this.emit(event.type, event);
+    }
   }
 
   static getPorts(): Promise<string[]> {

@@ -8,6 +8,17 @@ const isKeyPressEvent = event => event[0] === '#';
 
 const extractKeyNumber = event => Number(event.substring(1));
 
+export const toEvent = rawData => {
+  const event = rawData.toString();
+  if (isKeyPressEvent(event)) {
+    const keyNumber = extractKeyNumber(event);
+    return { type: 'board-key-pressed', keyNumber: keyNumber };
+    // executeAction(keyNumber, write(port));
+  } else {
+    console.warn('New event from the board', event);
+  }
+};
+
 export const onData = port => (data) => {
   const event = data.toString();
   if (isKeyPressEvent(event)) {
