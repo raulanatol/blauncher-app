@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
 import boardImage from './board.png';
 import styled from '@emotion/styled';
-import { Area } from './Area';
 import { SelectedArea } from './SelectedArea';
+import { MessageManager } from '../../../ipc/MessageManager';
+
+const Area = styled.area`
+  cursor: pointer;
+`;
 
 const Container = styled.div`
   width: 500px;
@@ -41,15 +45,12 @@ function generateAreas(columns: number, rows: number) {
 
 
 export const BoardManager: FC = () => {
-
-  const handleClick = number => {
-    console.log('>', number);
-  };
+  const handleClick = number => () => MessageManager.virtualBoardKeyPressed(number).catch(console.error);
 
   return <Container>
     <map name="map">
       <SelectedArea areas={AREAS}/>
-      {Object.keys(AREAS).map(areaId => <Area key={areaId} keyValue={areaId} coords={AREAS[areaId]} onClick={handleClick}/>)}
+      {Object.keys(AREAS).map(areaId => <Area key={areaId} shape="rect" coords={AREAS[areaId]} onClick={handleClick(areaId)}/>)}
     </map>
     <Image alt="board" width={500} height={299} src={boardImage} useMap="#map"/>
   </Container>;

@@ -20,7 +20,7 @@ export class RootStore {
   lastSerialPortConnected: string;
 
   constructor() {
-    this.currentView = 'HOME';
+    this.currentView = 'BOARD';
     this.electronStore = new ElectronStore();
 
     this.isBoardConnected = this.electronStore.get('isBoardConnected');

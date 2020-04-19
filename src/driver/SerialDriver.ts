@@ -1,6 +1,8 @@
 import SerialPort from 'serialport';
 import { EventEmitter } from 'events';
 import { toEvent } from './events';
+import { drawPixelCommand } from './commands';
+import { Pixel } from './Pixel';
 
 export const MAX_PIXEL_NUMBER = 32;
 
@@ -47,5 +49,12 @@ export class SerialDriver extends EventEmitter {
         err ? reject(err) : resolve(true);
       });
     });
+  }
+
+  emulateKeyPressed(keyNumber: number) {
+    this.port.write(drawPixelCommand([new Pixel(keyNumber, '00FF00')]));
+    setTimeout(() => {
+      this.port.write(drawPixelCommand([new Pixel(keyNumber, '000000')]));
+    }, 250);
   }
 }
