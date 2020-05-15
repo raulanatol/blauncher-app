@@ -20,7 +20,7 @@ export class RootStore {
   lastSerialPortConnected: string;
 
   constructor() {
-    this.currentView = 'HOME';
+    this.currentView = 'BOARD';
     this.electronStore = new ElectronStore();
 
     this.isBoardConnected = this.electronStore.get('isBoardConnected');
@@ -35,6 +35,12 @@ export class RootStore {
   @action
   changeView(newView: View) {
     this.currentView = newView;
+  }
+
+  @action
+  boardKeyPressed(keyNumber: number) {
+    console.log('boardKeyPressed', keyNumber);
+    // this.lastKeyPressed = keyNumber + '';
   }
 
   @action

@@ -8,4 +8,8 @@ export class MessageManager {
   static getSerialPorts(): Promise<string[]> {
     return ipcRenderer.invoke('get-serial-ports');
   }
+
+  static virtualBoardKeyPressed(keyNumber: number) {
+    return ipcRenderer.invoke('virtual-board-key-pressed', keyNumber);
+  }
 }

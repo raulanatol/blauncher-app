@@ -62,6 +62,7 @@ export class AppManager {
     this.app.on('activate', () => this.onActivate());
     ipcMain.handle('open-connection', async (event, address) => this.onOpenConnection(address));
     ipcMain.handle('get-serial-ports', async () => AppManager.handleGetSerialPorts());
+    ipcMain.handle('virtual-board-key-pressed', async (event, keyNumber) => this.handleVirtualBoardKeyPressed(keyNumber));
   }
 
   private async onAppReady() {
@@ -82,11 +83,18 @@ export class AppManager {
 
   private async onOpenConnection(address: string): Promise<boolean> {
     this.driver = new SerialDriver(address);
+
+    this.driver.on('board-key-pressed', event => this.mainWindow.webContents.send(event.type, event));
+
     const isConnected = await this.driver.openConnection();
     if (isConnected) {
       this.tray.setImage('assets/icon16x16.png');
     }
     return isConnected;
+  }
+
+  private handleVirtualBoardKeyPressed(keyNumber: number) {
+    this.driver.emulateKeyPressed(keyNumber);
   }
 
   private static async handleGetSerialPorts(): Promise<string[]> {
