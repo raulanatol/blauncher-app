@@ -1,8 +1,20 @@
-import { action, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import ElectronStore from 'electron-store';
 import { MessageManager } from '../ipc/MessageManager';
 
 export type View = 'HOME' | 'PREFERENCES' | 'BOARD';
+
+export interface KeyConfiguration {
+  title: string;
+}
+
+type Dict<T> = {
+  [key: string]: T
+};
+
+interface Configuration {
+  keys: Dict<KeyConfiguration>;
+}
 
 export class RootStore {
 
@@ -17,6 +29,19 @@ export class RootStore {
   @observable
   serialPorts?: string[];
 
+  @observable
+  currentKey?: number;
+
+  @observable
+  configuration: Configuration;
+
+  @computed
+  get currentConfiguration(): KeyConfiguration | undefined {
+    if (this.currentKey && this.configuration.keys) {
+      return this.configuration.keys[this.currentKey];
+    }
+  }
+
   lastSerialPortConnected: string;
 
   constructor() {
@@ -25,6 +50,7 @@ export class RootStore {
 
     this.isBoardConnected = this.electronStore.get('isBoardConnected');
     this.lastSerialPortConnected = this.electronStore.get('lastSerialPortConnected');
+    this.configuration = this.electronStore.get('boardConfiguration') || {};
     this.initialize();
   }
 
@@ -39,8 +65,8 @@ export class RootStore {
 
   @action
   boardKeyPressed(keyNumber: number) {
+    this.currentKey = keyNumber;
     console.log('boardKeyPressed', keyNumber);
-    // this.lastKeyPressed = keyNumber + '';
   }
 
   @action
@@ -57,5 +83,11 @@ export class RootStore {
         this.serialPorts = newSerialPorts;
       });
     });
+  }
+
+  @action
+  onVirtualKeyboardKeyPressed(keyPressed: number) {
+    this.currentKey = keyPressed;
+    MessageManager.virtualBoardKeyPressed(keyPressed).catch(console.error);
   }
 }

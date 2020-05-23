@@ -9,14 +9,13 @@ const Selected = styled.div<any>`
   left: ${props => props.left}px;
   width: 44px;
   height: 44px;
-
 `;
 
 interface SelectedAreaProps {
   areas: any;
 }
 
-export const SelectedArea: FC<SelectedAreaProps> = ({ areas }) => {
+export const SelectArea: FC<SelectedAreaProps> = ({ areas }) => {
   const [lastKeyPressed, setLastKeyPressed] = useState<number>();
 
   useEffect(() => {
