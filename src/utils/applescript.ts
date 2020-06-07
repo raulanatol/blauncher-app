@@ -1,3 +1,3 @@
 import { run } from '@jxa/run';
 
-export const execute = (script) => run( script);
+export const execute = script => run(script);

@@ -7,7 +7,7 @@ export type View = 'HOME' | 'PREFERENCES' | 'BOARD' | 'SELECT_ACTION';
 
 export interface KeyConfiguration {
   action: ActionDefinition;
-  extraConfiguration?: object;
+  extraConfiguration?: any;
 }
 
 type Dict<T> = {
