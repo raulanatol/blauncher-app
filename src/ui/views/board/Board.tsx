@@ -5,9 +5,12 @@ import { KeyConfigurationPanel } from './components/configuration/KeyConfigurati
 
 const Container = styled.div`
   display: flex;
-  justify-content: center;
-  flex-direction: column;
+  padding: 10px;
   align-items: center;
+  flex-direction: column;
+  text-align: center;
+  height: 100vh;
+  flex-grow: 1;
 `;
 
 export const Board: FC = () => {

@@ -3,12 +3,15 @@ import styled from '@emotion/styled';
 import { ipcRenderer } from 'electron';
 
 const Selected = styled.div<any>`
-  position: relative;
-  background: green;
-  top: ${props => props.top}px;
-  left: ${props => props.left}px;
-  width: 44px;
-  height: 44px;
+  position: absolute;
+  background: #2C7A7B;
+  top: ${props => props.top - 2}px;
+  left: ${props => props.left - 2}px;
+  width: 47px;
+  height: 47px;
+  border-radius: 10px;
+  z-index: 1;
+  pointer-events: none;
 `;
 
 interface SelectedAreaProps {

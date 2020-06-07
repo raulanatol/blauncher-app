@@ -1,18 +1,20 @@
 import { action, computed, observable, runInAction } from 'mobx';
 import ElectronStore from 'electron-store';
 import { MessageManager } from '../ipc/MessageManager';
+import { ActionDefinition } from '../views/selectAction/SelectActions';
 
-export type View = 'HOME' | 'PREFERENCES' | 'BOARD';
+export type View = 'HOME' | 'PREFERENCES' | 'BOARD' | 'SELECT_ACTION';
 
 export interface KeyConfiguration {
-  title: string;
+  action: ActionDefinition;
+  extraConfiguration?: object;
 }
 
 type Dict<T> = {
-  [key: string]: T
+  [key: string]: T;
 };
 
-interface Configuration {
+export interface Configuration {
   keys: Dict<KeyConfiguration>;
 }
 
@@ -37,7 +39,7 @@ export class RootStore {
 
   @computed
   get currentConfiguration(): KeyConfiguration | undefined {
-    if (this.currentKey && this.configuration.keys) {
+    if (this.currentKey >= 0 && this.configuration.keys) {
       return this.configuration.keys[this.currentKey];
     }
   }
@@ -50,7 +52,7 @@ export class RootStore {
 
     this.isBoardConnected = this.electronStore.get('isBoardConnected');
     this.lastSerialPortConnected = this.electronStore.get('lastSerialPortConnected');
-    this.configuration = this.electronStore.get('boardConfiguration') || {};
+    this.configuration = this.electronStore.get('boardConfiguration') || { keys: {} };
     this.initialize();
   }
 
@@ -89,5 +91,23 @@ export class RootStore {
   onVirtualKeyboardKeyPressed(keyPressed: number) {
     this.currentKey = keyPressed;
     MessageManager.virtualBoardKeyPressed(keyPressed).catch(console.error);
+  }
+
+  @action
+  saveLastConfiguration() {
+    this.electronStore.set('boardConfiguration', this.configuration);
+  }
+
+  @action
+  assignActionToCurrentKey(action: ActionDefinition) {
+    this.configuration.keys[this.currentKey] = { action };
+    this.saveLastConfiguration();
+    this.changeView('BOARD');
+  }
+
+  @action
+  removeActionToCurrentKey() {
+    this.configuration.keys[this.currentKey] = undefined;
+    this.saveLastConfiguration();
   }
 }

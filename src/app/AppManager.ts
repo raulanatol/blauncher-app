@@ -21,6 +21,7 @@ const createMainWindow = () => {
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true
     },

@@ -1,25 +1,29 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { useStoreContext } from '../../../../state/AppContextProvider';
-import { Header } from './Header';
-import { Body } from './Body';
 import styled from '@emotion/styled';
+import { NoConfiguredKey } from '../NoConfiguredKey';
+import { ConfiguredKey } from '../ConfiguredKey';
 
 const Container = styled.div`
   width: 100%;
 `;
 
 export const KeyConfigurationPanel: FC = observer(() => {
-  const { currentKey, currentConfiguration } = useStoreContext();
+  const store = useStoreContext();
+  const { currentKey, currentConfiguration } = store;
 
-  if (!currentKey) {
+  const onClickSetAction = () => store.changeView('SELECT_ACTION');
+
+  if (currentKey < 0) {
     return <Container>
-      <p>Select a key to configure its action.</p>
+      <p>Select any key to see it's configuration.</p>
     </Container>;
   }
 
-  return <Container>
-    <Header configuration={currentConfiguration}/>
-    <Body/>
-  </Container>;
+  if (!currentConfiguration) {
+    return <NoConfiguredKey onClickSetAction={onClickSetAction}/>;
+  }
+
+  return <ConfiguredKey configuration={currentConfiguration}/>;
 });

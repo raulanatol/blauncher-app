@@ -1,13 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import boardImage from './board.png';
 import styled from '@emotion/styled';
 import { SelectArea } from './SelectArea';
-import { MessageManager } from '../../../ipc/MessageManager';
 import { useStoreContext } from '../../../state/AppContextProvider';
 import { CurrentArea } from './CurrentArea';
+import { PointerArea } from './PointerArea';
+import { BoardKeyStatus } from './BoardKeyStatus';
 
 const Area = styled.area`
   cursor: pointer;
+  background-color: red;
 `;
 
 const Container = styled.div`
@@ -25,6 +27,7 @@ const Image = styled.img`
   position: absolute;
   top:0;
   left: 0;
+  z-index: 3;
   user-select: none;
 `;
 
@@ -53,15 +56,28 @@ function generateAreas(columns: number, rows: number) {
 
 export const BoardManager: FC = () => {
   const store = useStoreContext();
+  const { configuration } = store;
+
+  const [pointerAreaId, setPointerAreaId] = useState();
 
   const handleClick = number => () => store.onVirtualKeyboardKeyPressed(number);
+
+  const handleMouseEnter = areaId => () => setPointerAreaId(areaId);
+  const handleMouseOut = areaId => () => areaId === pointerAreaId && setPointerAreaId(undefined);
 
   return <Container>
     <Board>
       <map name="map">
         <SelectArea areas={AREAS}/>
         <CurrentArea areas={AREAS}/>
-        {Object.keys(AREAS).map(areaId => <Area key={areaId} shape="rect" coords={AREAS[areaId]} onClick={handleClick(areaId)}/>)}
+        <PointerArea areas={AREAS} pointerAreaId={pointerAreaId}/>
+        <BoardKeyStatus areas={AREAS} configuration={configuration}/>
+        {Object.keys(AREAS).map(areaId => <Area key={areaId}
+                                                shape="rect"
+                                                coords={AREAS[areaId]}
+                                                onMouseEnter={handleMouseEnter(areaId)}
+                                                onMouseOut={handleMouseOut(areaId)}
+                                                onClick={handleClick(areaId)}/>)}
       </map>
       <Image alt="board" width={500} height={299} src={boardImage} useMap="#map"/>
     </Board>

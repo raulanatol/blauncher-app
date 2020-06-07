@@ -5,13 +5,14 @@ import { observer } from 'mobx-react';
 
 const Current = styled.div<any>`
   position: relative;
-  top: ${props => props.top - 2}px;
-  left: ${props => props.left - 2}px;
-  width: 34px;
-  height: 34px;
-  border: 5px solid #debc40;
+  top: ${props => props.top - 3}px;
+  left: ${props => props.left - 3}px;
+  width: 46px;
+  height: 46px;
+  border: 6px solid #debc40;
   border-radius: 10px;
-  z-index: 1;
+  z-index: 4;
+  cursor: pointer;
 `;
 
 interface CurrentAreaProps {
@@ -21,7 +22,7 @@ interface CurrentAreaProps {
 export const CurrentArea: FC<CurrentAreaProps> = observer(({ areas }) => {
   const { currentKey } = useStoreContext();
 
-  if (!currentKey) {
+  if (currentKey < 0) {
     return null;
   }
 
