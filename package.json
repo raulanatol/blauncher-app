@@ -1,7 +1,7 @@
 {
   "name": "blauncher-app",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "version": "1.0.2",
+  "description": "Blauncher application",
   "keywords": [],
   "license": "MIT",
   "author": {
@@ -62,6 +62,18 @@
             }
           }
         ]
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "raulanatol",
+              "name": "blauncher-app"
+            },
+            "prerelease": true
+          }
+        }
       ]
     }
   },
@@ -98,6 +110,7 @@
     "@electron-forge/maker-squirrel": "6.0.0-beta.51",
     "@electron-forge/maker-zip": "6.0.0-beta.51",
     "@electron-forge/plugin-webpack": "6.0.0-beta.51",
+    "@electron-forge/publisher-github": "^6.0.0-beta.51",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@types/jest": "^25.2.3",
     "@types/react": "^16.9.35",
@@ -117,6 +130,7 @@
     "eslint-plugin-react-hooks": "4.x",
     "fork-ts-checker-webpack-plugin": "^4.1.6",
     "jest": "^26.0.1",
+    "node-abi": "^2.18.0",
     "node-loader": "^0.6.0",
     "prettier": "^2.0.5",
     "react-treebeard": "^3.2.4",
