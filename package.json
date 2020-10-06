@@ -119,7 +119,7 @@
     "@typescript-eslint/parser": "3.x",
     "babel-eslint": "10.x",
     "css-loader": "^3.5.3",
-    "electron": "9.0.2",
+    "electron": "9.3.0",
     "electron-rebuild": "^1.11.0",
     "eslint": "7.x",
     "eslint-config-react-app": "^5.2.1",
